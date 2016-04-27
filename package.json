@@ -1,0 +1,22 @@
+{
+  "name": "node-gen",
+  "version": "0.0.0",
+  "description": "DevoApi",
+  "main": "index.js",
+  "dependencies": {
+    "co": "^4.6.0",
+    "connect": "~3.4.1",
+    "express": "~4.13.4",
+    "jade": "~1.11.0",
+    "koa": "^1.2.0",
+    "koa-bodyparser": "^2.0.1",
+    "koa-router": "^5.4.0",
+    "mongoose": "^4.4.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "author": "devo",
+  "license": "BSD-2-Clause"
+}
