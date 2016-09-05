@@ -3,7 +3,8 @@
  * Project: devoMain  
  */
 // Global Modules
-console.log( 'loading global modules:' );
+global.AppLogger = Logger.get( 'app' );
+AppLogger.info( "Loading Global Modules...." );
 global.fs = load( 'fs' );
 console.log( 'loading fs' );
 global.path = load( 'path' );

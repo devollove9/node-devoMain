@@ -1,0 +1,14 @@
+[
+  {
+    "type":"console",
+    "filename":"/data/log/node/app.log",
+    "category":"app"
+  },
+  {
+
+    "category": "logstash",
+    "type":"log4js-logstash",
+    "host":"localhost",
+    "port": 5001
+  }
+]

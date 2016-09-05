@@ -11,11 +11,15 @@
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.0.1",
     "koa-router": "^5.4.0",
+    "log4js": "^0.6.38",
+    "log4js-logstash": "^0.2.2",
     "mongoose": "^4.4.13"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node --harmony --use_strict index.js",
+    "doc": "node --harmony --use_strict build-tools/build-route.js"
   },
   "author": "devo",
   "license": "BSD-2-Clause"

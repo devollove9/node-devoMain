@@ -7,10 +7,14 @@ var co = require( "co" );
 
 // Require Global File Loader
 require( "./loader" );
-
+global.ENV = {};
 // Main Flow
 co( function* () {
     let context = {};
+
+    // Logger
+    yield load( 'logger' )( global );
+    
     // Load all global functions & variables
     yield load( './imagine' )( global );
     

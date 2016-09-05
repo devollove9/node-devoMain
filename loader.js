@@ -11,4 +11,3 @@ global.load = function load(url) {
         throw e;
     }
 };
-global.ENV = {};

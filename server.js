@@ -4,16 +4,7 @@ let app = koa();
 let router = load('koa-router')();
 
 const bodyParser = require('koa-bodyparser');
-const mongoose = require( 'mongoose' );
-mongoose.connect( 'mongodb://localhost/production' );
-let models = {};
 
-
-const userSchema = new mongoose.Schema({
-    username:String,
-    password:String
-},{collection:'users'});
-models['users'] = mongoose.model( 'users', userSchema );
 module.exports = (context) => {
 app.use(bodyParser());
 
@@ -30,9 +21,14 @@ router.get('/listUsers', function *(next) {
     //var data2 = yield readFilesla;
     //var data2 = fs.readFileSync( "user.json" , 'utf8' );
     //console.log( data2 );
-    var data = yield readFilesla( "user.json");
-    console.log( data );
-    me.body = JSON.parse( data );
+    //var data = yield readFilesla( "user.json");
+    //console.log( data );
+    let users = [];
+    users = yield models.User
+        .find({})
+        .lean().exec();
+    console.log( users );
+    me.body = users;
 });
 
 router.get('/', function *(next) {
