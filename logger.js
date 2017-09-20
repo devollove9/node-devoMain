@@ -15,4 +15,5 @@ module.exports=function* loadLog(context) {
         }
     };
     context.Logger.get( 'app' ).info( 'INIT:  Log4Js initialized.' );
+    context.AppLogger = context.Logger.get( 'app' );
 };

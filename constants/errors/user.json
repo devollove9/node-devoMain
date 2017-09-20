@@ -1,0 +1,6 @@
+{
+  "USER_PERMISSION_NOT_EXIST":{
+    "errorCode":4010,
+    "errorMessage":"Can not find permission."
+  }
+}

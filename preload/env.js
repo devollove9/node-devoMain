@@ -1,29 +1,26 @@
 /**
  * Created by devo on 4/26/2016.
  */
-let sprintf = load('sprintf').sprintf;
-let axios = load('axios');
+//let sprintf = load('sprintf').sprintf;
+//let axios = load('axios');
 let env = load('env.json');
 let extend = load('deep-extend');
-let fs = load('co-fs');
+//let fs = load('co-fs');
 
-exports = module.exports = function* loadRedis(context) {
-    let logger = context.Logger.get('app');
-    logger.info('INIT:  loading environment variables');
-    logger.info('');
-
+module.exports = function* loadRedis(context) {
     let remoteEnv = {};
-
+    /*
     if (process.env.NODE_ENV == 'CI') {
-        remoteEnv = load('config.json');
+        remoteEnv = load( 'config.json' );
     } else {
         remoteEnv = yield axios.get(env.REMOTE_CONFIG);
         remoteEnv = remoteEnv.data;
     }
+    */
 
     extend(remoteEnv,env);
-    env = remoteEnv
-
+    env = remoteEnv;
+    /*
     Object.keys(env).forEach(function(key) {
         logger.info(sprintf(
             ' - %-30s  : %s',
@@ -52,6 +49,6 @@ exports = module.exports = function* loadRedis(context) {
         logger.info('     |_|  |_|  \\____/  |_____/  |______|      ');
 
     }
-    logger.info('');
-    ENV = extend(ENV,env);
+    logger.info('');*/
+    ENV = extend( ENV ,env );
 };

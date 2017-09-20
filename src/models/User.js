@@ -5,6 +5,8 @@ const mongoose = load( 'mongoose' );
 const schema = new mongoose.Schema(
     {
         userId:String,
+        username:String,
+        password:String,
         registerDate:Number,
         lastLoginDate:Number,
         account:{
@@ -16,23 +18,7 @@ const schema = new mongoose.Schema(
             platform:String
         },
         activeAddressId:String,
-        activePaymentId:String,
-        favoriteItems:[
-            {
-                itemId:String,
-                name:String,
-                nameEn:String,
-                storeName:String,
-                storeNameEn:String
-            }
-        ],
-        favoriteStores:[
-            {
-                storeId:String,
-                name:String,
-                nameEn:String
-            }
-        ]
+        activePaymentId:String
     },
     {
         collection:'User'

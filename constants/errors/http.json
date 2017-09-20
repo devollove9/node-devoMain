@@ -1,0 +1,6 @@
+{
+  "422":{
+    "errorCode":422,
+    "errorMessage":"Request is not acceptable."
+  }
+}
