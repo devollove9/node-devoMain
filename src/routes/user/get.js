@@ -37,6 +37,7 @@ module.exports = [
     function* userGet( next ) {
         let users = [];
         // Find User
+        AppLogger.info( 'asdad');
         if ( this.params.userId ) {
             users = yield models.User
                 .findOne()

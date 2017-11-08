@@ -1,2 +1,4 @@
 # node-devoMain
-node-api 
+node-api
+
+Deprecated, See https://github.com/devollove9/devoMain-Api 

@@ -5,7 +5,7 @@
 var stringUtil = load( 'underscore.string' );
 var microtime = load( 'microtime' );
 
-module.exports=function( machineId , groupId ) {
+module.exports = function( machineId , groupId ) {
     machineId = machineId || ENV.MACHINE;
     groupId = groupId || ENV.GROUP;
     groupId = parseInt( groupId.toString().substr( 0 ,1 ) ).toString();

@@ -18,7 +18,7 @@ module.exports = (context) => {
         } );
     };
     app.use( bodyParser() );
-    app.use( load('middlewares/errorHandler' )());
+    app.use( load('middleware/errorHandler' )());
     app.use( gzip() );
     app.use( load('src/routes').routes() );
     return app;

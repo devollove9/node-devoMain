@@ -7,9 +7,11 @@ var co = require( "co" );
 
 // Require Global File Loader
 require( "./loader" );
+
 global.ENV = {};
 global.fs = load( 'fs' );
 global.path = load( 'path' );
+
 // Main Flow
 co( function* () {
     let context = {};
@@ -30,7 +32,7 @@ co( function* () {
     let app = load( 'server' )( global );
     
     // Start app
-    app.listen( 3000 );
+    app.listen( ENV.SERVER_PORT );
     
 }).catch(function(err) {
     console.error(err);

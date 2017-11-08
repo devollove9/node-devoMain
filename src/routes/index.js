@@ -18,7 +18,7 @@ AppLogger.info( "    [Routes] Loading src directory 'routes' from 'src/routes'."
 for( let route of routes ) {
     
     let ctrl = load( route );
-
+    
     let p = getModuleName( route , 1 , 'c' );
     let method = path.basename( route , path.extname( route ) );
     let url = route.substr( 10 );
