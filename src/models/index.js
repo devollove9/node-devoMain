@@ -5,7 +5,7 @@
 
 let mongoose = require( 'mongoose' );
 
-module.exports = function *( context ) {
+module.exports = async ( context ) => {
     mongoose.connect( 'mongodb://localhost/production' );
     let moduleName = getModuleName( __dirname , 1 );
     AppLogger.info( moduleName + "Database connected." );

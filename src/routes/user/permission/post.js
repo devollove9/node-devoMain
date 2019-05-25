@@ -23,9 +23,9 @@ module.exports = [
             criteria:{}
         }
     ),
-    function * userPermissionPost(next) {
+    async (next) => {
         let permission = new models.Permission();
-        let user = yield models.User
+        let user = await models.User
             .findOne()
             .where('userId').equals( this.params.userId )
             .lean().exec();
@@ -49,8 +49,8 @@ module.exports = [
             }
             permission.permission.push( perm );
         }
-        yield permission.save();
+        await permission.save();
         send( this , permission );
-        yield next;
+        await next();
     }
 ];

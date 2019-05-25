@@ -9,11 +9,11 @@ let idGenerator = load( 'libs/idGenerator' );
 
 module.exports = [
     queryValidator( load( 'validation/user/register' ) ),
-    function* userRegister( next ) {
+    async ( next ) => {
         let user;
         
         // Try Find User
-        user = yield models.User
+        user = await models.User
             .findOne()
             .where( 'username' ).equals( this.params.username.toLowerCase() )
             .lean().exec();
@@ -22,7 +22,7 @@ module.exports = [
             throw errors.USER.USER_USERNAME_EXIST;
         }
         let newUserId = idGenerator();
-        var date = new Date();
+        let date = new Date();
         let newUser = new models.User({
             userId: newUserId,
             username:this.params.username.toLowerCase(),
@@ -38,7 +38,7 @@ module.exports = [
                 platform:''
             }
         });
-        yield newUser.save();
+        await newUser.save();
 
         let newPermission = new models.Permission(
             {
@@ -57,8 +57,8 @@ module.exports = [
                 ]
             }
         );
-        yield newPermission.save();
+        await newPermission.save();
         
         send( this , newUser );
-        yield next;
+        await next();
     }];

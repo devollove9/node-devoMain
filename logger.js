@@ -3,7 +3,7 @@
  */
 var log4js 		= load('log4js');
 
-module.exports=function* loadLog(context) {
+module.exports= async function loadLog(context) {
     let json=load( '/config/log.json' );
     log4js.configure( { appenders:json } );
     context.Logger={

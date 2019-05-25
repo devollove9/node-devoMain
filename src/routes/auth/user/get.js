@@ -6,10 +6,10 @@ let queryValidator = load( 'middleware/queryValidator' );
 let crypt = load( 'libs/encryption/crypt' );
 module.exports = [
     queryValidator( load( 'validation/auth/user' ) ),
-    function* authUser( next ) {
+    async ( next ) => {
         
         // Find User
-        let user = yield models.User
+        let user = await models.User
             .findOne()
             .where( 'username' ).equals( this.params.username )
             .lean().exec();
@@ -22,9 +22,9 @@ module.exports = [
         if ( user.password !== crypt.encrypt( this.request.query.password ) ) throw errors.AUTHENTICATION.USERNAME_PASSWORD_INCORRECT;
         
         // Gather Permissions
-        let userPermission = yield models.Permission.findOne().where( 'userId' ).equals( user.userId ).lean().exec();
+        let userPermission = await models.Permission.findOne().where( 'userId' ).equals( user.userId ).lean().exec();
         
         
         send( this , user );
-        yield next;
+        await next;
 }];

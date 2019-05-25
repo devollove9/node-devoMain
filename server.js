@@ -1,8 +1,8 @@
 
 const koa = require( 'koa' );
-let app = koa();
+let app = new koa();
 //let router = load('koa-router')();
-const gzip = load( 'koa-gzip' );
+const compress  = load( 'koa-compress' );
 const bodyParser = load('koa-bodyparser');
 
 module.exports = (context) => {
@@ -19,7 +19,7 @@ module.exports = (context) => {
     };
     app.use( bodyParser() );
     app.use( load('middleware/errorHandler' )());
-    app.use( gzip() );
+    app.use( compress() );
     app.use( load('src/routes').routes() );
     return app;
 };

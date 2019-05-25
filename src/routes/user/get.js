@@ -3,10 +3,10 @@
  */
 let errors = load( 'constants/errors' );
 let queryValidator = load( 'middleware/queryValidator' );
-let crypt = load( 'libs/encryption/crypt' );
 let permissionFilter = load( 'middleware/permissionFilter' );
 module.exports = [
     queryValidator( load( 'validation/user/get' ) ),
+  /*
     permissionFilter(
         {
             role: 'user',
@@ -33,27 +33,28 @@ module.exports = [
             criteria:{
             }
         }
-    ),
-    function* userGet( next ) {
+    ),*/
+    async (ctx, next) => {
+    console.log('asd')
         let users = [];
         // Find User
-        AppLogger.info( 'asdad');
-        if ( this.params.userId ) {
-            users = yield models.User
+        AppLogger.info( 'Getting User');
+        if ( ctx.params.userId ) {
+            users = await models.User
                 .findOne()
-                .where( 'userId' ).equals( this.params.username )
+                .where( 'userId' ).equals( ctx.params.username )
                 .lean().exec();
-        } else if ( this.params.username != undefined ) {
-            users = yield models.User
-                .where( 'username' ).regex( new RegExp( this.params.username , 'i' ) ).lean().exec();
+        } else if ( ctx.params.username !== undefined ) {
+            users = await models.User
+                .where( 'username' ).regex( new RegExp( ctx.params.username , 'i' ) ).lean().exec();
         } else {
-            users = yield models.User.find( {} ).lean().exec();
+            users = await models.User.find( {} ).lean().exec();
         }
         
         if ( ! users ) {
             throw errors.AUTHENTICATION.USER_NOT_EXIST 
         }
 
-        send( this , users );
-        yield next;
+        send( ctx , users );
+        await next();
     }];

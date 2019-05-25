@@ -33,7 +33,12 @@ co( function* () {
     
     // Start app
     app.listen( ENV.SERVER_PORT );
-    
+    AppLogger.info('');
+    AppLogger.info('****************************************************************');
+    AppLogger.info('*********** Server started,listening on port:' + ENV.SERVER_PORT + ' **************');
+    AppLogger.info('****************************************************************');
+    console.log(String.fromCharCode(23));
+
 }).catch(function(err) {
     console.error(err);
     console.error(err.stack || '');

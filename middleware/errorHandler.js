@@ -3,28 +3,27 @@
  */
 let sprintf = load('sprintf').sprintf;
 module.exports = function errorHandler() {
-    return function* errorHandler(next) {
+    return async (ctx, next) => {
         let error;
         let start;
         let logger = Logger.get('logstash');
-        this.errorCode = 200;
+        ctx.errorCode = 200;
         try {
             start = new Date;
-            yield next;
+            await next();
         } catch (err) {
             error = err;
             if (err.status === 408) {
-                this.errorCode  = 408;
+                ctx.errorCode  = 408;
                 err = {
                     errorCode:408,
-                    errorMessage:'You request has timed out'
+                    errorMessage:'Your request has timed out'
                 }
             }
 
-            if ((err.errorCode === undefined ||
-                err.errorMessage === undefined)) {
+            if (err.errorCode === undefined || err.errorMessage === undefined) {
                 if (err.status === 400 && !err.moreInfo) {
-                    this.errorCode = 422;
+                    ctx.errorCode = 422;
                     err = {
                         errorCode: 422,
                         errorMessage: 'The requested parameters are not processable',
@@ -32,7 +31,7 @@ module.exports = function errorHandler() {
                     };
                 } else {
                     console.log( err );
-                    this.errorCode = 500;
+                    ctx.errorCode = 500;
                     if (!ENV.DEBUG) {
                         //NR.noticeError(err);
                         err = {
@@ -60,33 +59,33 @@ module.exports = function errorHandler() {
                     }
                 }
             } else {
-                this.errorCode = err.errorCode || 500;
+                ctx.errorCode = err.errorCode || 500;
                 logger.info(
                     sprintf(
                         '%-4s %-5d  %-80s  %-15s  %dms',
-                        this.method,
+                        ctx.method,
                         err.errorCode || 500,
-                        this.url,
-                        this.headers['x-forwarded-for'] || this.ip,
+                        ctx.url,
+                        ctx.headers['x-forwarded-for'] || ctx.ip,
                         new Date - start));
             }
-            this.status = 200;
-            this.body = JSON.stringify({
+            ctx.status = 200;
+            ctx.body = JSON.stringify({
                 error:err
             });
-            this.result = {
+            ctx.result = {
                 error:err
             };
         }
         if (error === undefined) {
-            let status = this.status;
+            let status = ctx.status;
             logger.info(
                 sprintf(
                     '%-4s %-5d  %-80s  %-15s  %dms',
-                    this.method,
+                    ctx.method,
                     status,
-                    this.url,
-                    this.headers['x-forwarded-for'] || this.ip,
+                    ctx.url,
+                    ctx.headers['x-forwarded-for'] || ctx.ip,
                     new Date - start));
         }
     };

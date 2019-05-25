@@ -72,26 +72,25 @@ function validate( role , action , criteria , permission ) {
 }
 
 module.exports = function permissionFilter( permission ) {
-    return function* permissionFilter( next ) {
+    return async (ctx, next) => {
         let userPermission = [ ];
         for ( let i = 0; i < permission.length; i++ ) {
             userPermission.push( deepCopy( permission[ i ] ) );
         }
         let flag = false;
-        this.roles = [];
+        ctx.roles = [];
         for ( let i = 0; i < userPermission.length; i++ ) {
             let p 		= userPermission[ i ];
-            let result 	= validate.call( this , p.role , p.action , p.criteria , this.token.permission );
+            let result 	= validate.call( this , p.role , p.action , p.criteria , ctx.token.permission );
             if ( result ) {
-                this.roles.push( p.role );
+                ctx.roles.push( p.role );
             }
             flag = flag || result;
         }
         if ( !flag ) {
-            yield next;
-            //throw errors.AUTHENTICATION.UNAUTHORIZED;
+            throw errors.AUTHENTICATION.UNAUTHORIZED;
         } else {
-            yield next;
+            await next();
         }
     }
 };

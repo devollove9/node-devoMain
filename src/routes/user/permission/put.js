@@ -13,7 +13,7 @@ module.exports = [
             action: 'user.permission.put',
             criteria: {}
         },{
-            role:'rootAdmin',
+            role: 'rootAdmin',
             action:'user.permission.put',
             criteria:{
             }
@@ -24,15 +24,15 @@ module.exports = [
             }
         }
     ),
-    function * userPermissionPut( next ) {
+    async (next) => {
         let permission;
         if ( this.params.userId ) {
-            permission = yield models.Permission
+            permission = await models.Permission
                 .findOne()
                 .where( 'userId' ).equals( this.params.userId )
                 .lean().exec();
         } else if ( this.params.permissionId ) {
-            permission = yield models.Permission
+            permission = await models.Permission
                 .findOne()
                 .where( 'permissionId' ).equals( this.params.permissionId )
                 .lean().exec();
@@ -57,8 +57,8 @@ module.exports = [
             }
             permission.permission.push( perm );
         }
-        yield permission.save();
+        await permission.save();
         send( this , permission );
-        yield next;
+        await next();
     }
 ];

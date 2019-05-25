@@ -24,14 +24,14 @@ module.exports = [
             }
         }
     ),
-    function * userPermissionGet() {
+    async () => {
         let permission = [];
         if ( this.params ) {
-            permission = yield models.Permission
+            permission = await models.Permission
                 .find( this.params )
                 .lean().exec();
         } else {
-            permission = yield models.Permission
+            permission = await models.Permission
                 .find( {} )
                 .lean().exec();
         }
@@ -39,7 +39,7 @@ module.exports = [
             throw errors.USER.USER_PERMISSION_NOT_EXIST;
         }
         send( this , permission );
-        yield( next );
+        await next();
     }
 
 ];

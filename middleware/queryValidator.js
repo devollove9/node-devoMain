@@ -4,12 +4,12 @@
 let joi = load( 'libs/dataParse/joiValidate' );
 let errors = load( 'constants/errors' );
 module.exports = function queryValidator( validation ) {
-    return function * queryValidator( next ) {
-        let requestQuery = this.query;
-        if ( this.method.toLowerCase() === 'get' ) {
-            requestQuery = this.query;
+    return async (ctx, next) => {
+        let requestQuery = ctx.query;
+        if ( ctx.method.toLowerCase() === 'get' ) {
+            requestQuery = ctx.query;
         } else {
-            requestQuery = this.request.body;
+            requestQuery = ctx.request.body;
         }
         if ( requestQuery === undefined ) {
             throw errors.HTTP[ '422' ];
@@ -17,7 +17,7 @@ module.exports = function queryValidator( validation ) {
         
         let result = joi.validate( requestQuery , validation );
         if ( result.error ) {
-            var error = {};
+            let error = {};
             error.errorCode = errors.HTTP[ '422' ].errorCode;
             error.errorMessage = errors.HTTP[ '422' ].errorMessage;
             //if ( this.headers[ 'x-response-errordetail' ] ) {
@@ -25,8 +25,8 @@ module.exports = function queryValidator( validation ) {
             //}
             throw error;
         } else {
-            this.params = result.value;
+            ctx.params = result.value;
         }
-        yield next;
+        await next();
     };
 };
