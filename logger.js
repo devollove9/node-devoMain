@@ -1,19 +1,22 @@
 /**
  * Created by devollove9 on 8/27/2016.
  */
-var log4js 		= load('log4js');
+import log4js from 'log4js'
+import log from './config/log.js'
 
-module.exports= async function loadLog(context) {
-    let json=load( '/config/log.json' );
-    log4js.configure( { appenders:json } );
-    context.Logger={
-        get:function get( name )  {
-            let logger= log4js.getLogger( name );
-            logger.setLevel( 'INFO' );
-            if ( ENV.DEBUG ) logger.setLevel( 'TRACE' );
-            return logger;
-        }
-    };
-    context.Logger.get( 'app' ).info( 'INIT:  Log4Js initialized.' );
-    context.AppLogger = context.Logger.get( 'app' );
-};
+const loadLog = (ctx) => {
+  log4js.configure(log)
+  ctx.Logger = {
+    get: function get (name) {
+      let logger = log4js.getLogger(name)
+      if (name === 'logstash') logger.level = 'DEBUG'
+      // logger.level = 'INFO'
+      if (ENV.DEBUG) logger.level = 'TRACE'
+      return logger
+    }
+  }
+  ctx.Logger.get('app').info('INIT:  Log4Js initialized.')
+  ctx.AppLogger = ctx.Logger.get('app')
+}
+
+export default loadLog

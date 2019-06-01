@@ -1,4 +1,12 @@
 {
+  "USER_USERNAME_EXIST":{
+    "errorCode":4000,
+    "errorMessage":"This username already exist."
+  },
+  "USER_NOT_EXIST":{
+    "errorCode":4001,
+    "errorMessage":"This user does not exist."
+  },
   "USER_PERMISSION_NOT_EXIST":{
     "errorCode":4010,
     "errorMessage":"Can not find permission."

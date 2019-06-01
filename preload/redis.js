@@ -1,18 +1,24 @@
 /**
- * Created by devollove9 on 2017/9/19.
+ * Created by devollove9 on 2017/10/24.
  */
-let preRedis = load( 'redis' );
-let redisClient = preRedis.createClient( ENV.REDIS_PORT , ENV.REDIS_HOST );
-let redis = load( 'co-redis' )( redisClient ).
-module.exports = function* ( context ) {
-    context.redis = redis;
-    context.ratelimit = preRedis.createClient(ENV.RATELIMIT.REDIS_PORT,ENV.RATELIMIT.REDIS_HOST);
-    yield new Promise( function( fulfill , reject ) {
-        redis.select( ENV.RATELIMIT.REDIS_DB , function( err ) {
-            if ( err ) reject( err );
-            else fulfill();
-        });
-    });
-    yield redis.select( ENV.REDIS_DB );
-    context.Logger.get('app').info( 'INIT:  Redis initialized on ' + ENV.REDIS_HOST + ':' + ENV.REDIS_PORT + ' database: ' + ENV.REDIS_DB );
-};
+import _redis from 'redis'
+import coRedis from 'co-redis'
+
+const loadRedis = async (ctx) => {
+    AppLogger.info('    [REDIS] Loading Redis')
+    let redisClient = _redis.createClient(ENV.REDIS_PORT, ENV.REDIS_HOST)
+    let redis = coRedis(redisClient)
+    ctx.redis = redis
+    ctx.ratelimitDB = _redis.createClient(ENV.RATELIMIT.REDIS_PORT, ENV.RATELIMIT.REDIS_HOST)
+    await new Promise((resolve, reject) => {
+        redis.select(ENV.RATELIMIT.REDIS_DB, (err) => {
+            if (err) reject(err)
+            else resolve()
+        })
+    })
+    await redis.select(ENV.REDIS_DB)
+    AppLogger.info('        [Redis] Redis initialized on ' + ENV.REDIS_HOST + ':' + ENV.REDIS_PORT + ' database ' + ENV.REDIS_DB)
+    AppLogger.info('    [Redis] Redis loaded...')
+}
+
+export default loadRedis

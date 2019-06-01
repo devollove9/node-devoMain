@@ -1,6 +1,7 @@
 {
-  "name"      :"Node-Gen",
-  "cwd"       :"/home/ubuntu/node-gen",
-  "node_args"     : ["--harmony","--use_strict"],
-  "script"    :"./index.js"
+  "apps" : [{
+    "name"      :"Node-Gen",
+    "cwd"       :"/home/ubuntu/node-gen",
+    "script"    :"./start.js"
+  }]
 }

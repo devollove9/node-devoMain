@@ -1,56 +1,56 @@
 /**
- * Created by devollove9 on 2017/9/19.
+ * Created by devollove9 on 2017/10/27.
  */
-let errors = load( 'constants/errors' );
-let queryValidator = load( 'middleware/queryValidator' );
-let permissionFilter = load( 'middleware/permissionFilter' );
-let generateId 	= load( 'libs/idGenerator' );
+import { errors } from '@/constants'
+import { queryValidator, permissionFilter } from '@/middlewares'
+import { idGenerator } from '@/libs'
+import validation from '@/validations/user/permission/post'
 
-module.exports = [
-    queryValidator( load( 'validation/user/permission/post' ) ),
+export default [
+    queryValidator(validation),
     permissionFilter(
         {
-            role:'superAdmin',
-            action:'user.permission.post',
+            role: 'superAdmin',
+            action: 'user.permission.post',
             criteria: {}
-        },{
-            role:'rootAdmin',
-            action:'user.permission.post',
-            criteria:{}
-        },{
-            role:'owner',
-            action:'user.permission.post',
-            criteria:{}
+        }, {
+            role: 'rootAdmin',
+            action: 'user.permission.post',
+            criteria: {}
+        }, {
+            role: 'owner',
+            action: 'user.permission.post',
+            criteria: {}
         }
     ),
-    async (next) => {
-        let permission = new models.Permission();
+    async (ctx, next) => {
+        let permission = new models.Permission()
         let user = await models.User
             .findOne()
-            .where('userId').equals( this.params.userId )
-            .lean().exec();
-        if ( !user ) throw errors.AUTHENTICATION.USER_NOT_EXIST;
-        permission.userId = user.userId;
-        permission.permissionId = generateId();
-        permission.permission = [];
-        for ( let p of ( this.params.permission || [] ) ) {
-            let perm = {};
-            perm.role = p.role;
-            perm.action = p.action;
-            perm.restrict = p.restrict;
-            perm.parameter = [];
-            for ( let k of Object.keys( p.parameter || {} ) ) {
+            .where('userId').equals(ctx.params.userId)
+
+        if (!user) throw errors.AUTHENTICATION.USER_NOT_EXIST
+        permission.userId = user.userId
+        permission.permissionId = idGenerator()
+        permission.permission = []
+        for (let p of (ctx.params.permission || [])) {
+            let perm = {}
+            perm.role = p.role
+            perm.action = p.action
+            perm.restrict = p.restrict
+            perm.parameter = []
+            for (let k of Object.keys(p.parameter || {})) {
                 perm.parameter.push(
                     {
-                        key:k,
-                        value:p.parameter[ k ]
+                        key: k,
+                        value: p.parameter[ k ]
                     }
-                );
+                )
             }
-            permission.permission.push( perm );
+            permission.permission.push(perm)
         }
-        await permission.save();
-        send( this , permission );
-        await next();
+        await permission.save()
+        send(ctx, permission)
+        await next()
     }
-];
+]

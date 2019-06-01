@@ -1,45 +1,44 @@
 /**
- * Created by devollove9 on 2017/9/19.
+ * Created by devollove9 on 2017/10/27.
  */
-let errors = load( 'constants/errors' );
-let queryValidator = load ( 'middleware/queryValidator' );
-let permissionFilter = load ( 'middleware/permissionFilter' );
+import { errors } from '@/constants'
+import { queryValidator, permissionFilter } from '@/middlewares'
 
-module.exports = [
-    queryValidator( load( 'validation/user/permission/get') ),
+import validation from '@/validations/user/permission/get'
+
+export default [
+    queryValidator(validation),
     permissionFilter(
         {
             role: 'superAdmin',
             action: 'user.permission.get',
             criteria: {}
-        },{
-            role:'rootAdmin',
-            action:'user.permission.get',
-            criteria:{
-            }
-        },{
-            role:'owner',
-            action:'user.permission.get',
-            criteria:{
-            }
+        }, 
+        {
+            role: 'rootAdmin',
+            action: 'user.permission.get',
+            criteria: {}
+        }, 
+        {
+            role: 'owner',
+            action: 'user.permission.get',
+            criteria: {}
         }
     ),
-    async () => {
-        let permission = [];
-        if ( this.params ) {
+    async (ctx, next) => {
+        let permission = []
+        if (ctx.params) {
             permission = await models.Permission
-                .find( this.params )
-                .lean().exec();
+                .find(this.params)
         } else {
             permission = await models.Permission
-                .find( {} )
-                .lean().exec();
+                .find({})
         }
-        if ( ! permission ) {
-            throw errors.USER.USER_PERMISSION_NOT_EXIST;
+        if (!permission) {
+            throw errors.USER.USER_PERMISSION_NOT_EXIST
         }
-        send( this , permission );
-        await next();
+        send(ctx, permission)
+        await next()
     }
 
-];
+]

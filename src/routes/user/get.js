@@ -1,11 +1,14 @@
 /**
- * Created by devollove9 on 2017/9/18.
+ * Created by devollove9 on 2017/10/26.
  */
-let errors = load( 'constants/errors' );
-let queryValidator = load( 'middleware/queryValidator' );
-let permissionFilter = load( 'middleware/permissionFilter' );
-module.exports = [
-    queryValidator( load( 'validation/user/get' ) ),
+import { errors } from '@/constants'
+import { queryValidator, permissionFilter } from '@/middlewares'
+import { crypt } from '@/libs'
+
+import validation from '@/validations/user/get'
+// import permission from '@/permissions/auth/user'
+export default [
+    // queryValidator(validation),
   /*
     permissionFilter(
         {
@@ -14,47 +17,39 @@ module.exports = [
             criteria: {
                 '_userId': ':userId'
             }
-        },{
-            role: 'admin',
+        },
+        {
+            role: 'operator',
             action: 'user.get',
             criteria: {}
-        },{
-            role: 'superAdmin',
+        },
+        {
+            role: 'store',
             action: 'user.get',
             criteria: {}
-        },{
-            role:'rootAdmin',
+        },
+        {
+            role:'admin',
             action:'user.get',
-            criteria:{
-            }
-        },{
-            role:'owner',
-            action:'user.get',
-            criteria:{
-            }
+            criteria:{}
         }
-    ),*/
+    ),
+*/
     async (ctx, next) => {
-    console.log('asd')
-        let users = [];
         // Find User
-        AppLogger.info( 'Getting User');
-        if ( ctx.params.userId ) {
-            users = await models.User
+        let user
+        if (ctx.params.username !== undefined) {
+            user = await models.User
                 .findOne()
-                .where( 'userId' ).equals( ctx.params.username )
-                .lean().exec();
-        } else if ( ctx.params.username !== undefined ) {
-            users = await models.User
-                .where( 'username' ).regex( new RegExp( ctx.params.username , 'i' ) ).lean().exec();
+                .where('username').equals(ctx.params.username)
+        } else if (ctx.params.userId !== undefined){
+            user = await models.User
+                .findOne()
+                .where('userId').equals(ctx.params.userId)
         } else {
-            users = await models.User.find( {} ).lean().exec();
+            user = await models.User.find({})
         }
-        
-        if ( ! users ) {
-            throw errors.AUTHENTICATION.USER_NOT_EXIST 
-        }
-
-        send( ctx , users );
-        await next();
-    }];
+        send(ctx, user)
+        await next()
+    }
+]

@@ -1,0 +1,10 @@
+{
+  "S3SERVICE_REGION_NOT_DEFINED":{
+    "errorCode":10000,
+    "errorMessage":"s3Service: region not defined"
+  },
+  "S3SERVICE_BUCKET_NOT_DEFINED":{
+    "errorCode":10001,
+    "errorMessage":"s3Service: bucket not defined"
+  }
+}

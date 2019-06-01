@@ -1,41 +1,47 @@
 /**
- * Created by devo on 4/26/2016.
+ * Created by devollove9 on 2017/10/26.
  */
+import Router from 'koa-router'
+import Sprintf from 'sprintf'
+import { loader, walkThrough as walk } from '@/libs'
+import path from 'path'
 
-let router = load( 'koa-router' )();
-let sprintf = load( 'sprintf' ).sprintf;
-let methods = [ 'get' , 'post' , 'del' , 'put' ];
+const loadRoutes = () => {
+    let methods = [ 'get', 'post', 'delete', 'put' ]
+    let sprintf = Sprintf.sprintf
+    let router = Router()
+    let routesDirty = walk(__dirname)
+    let routes = []
 
-let routesDirty = walk( __dirname );
-let routes = [];
-
-for ( let route of routesDirty ) {
-    if ( path.basename( route , path.extname( route ) ) === 'index' ) continue;
-    routes.push( route.substr( process.env.PWD.length + 1 ) );
-
-}
-AppLogger.info( "    [Routes] Loading src directory 'routes' from 'src/routes'." );
-for( let route of routes ) {
-    
-    let ctrl = load( route );
-    
-    let p = getModuleName( route , 1 , 'c' );
-    let method = path.basename( route , path.extname( route ) );
-    let url = route.substr( 10 );
-    if( methods.indexOf( method ) === -1 ) {
-        method = 'get';
-        url = url.substr( 0 , url.length - 3 );
-    } else {
-        url = url.substr( 0 , url.length - method.length - 4 );
+    for (let route of routesDirty) {
+        if (path.basename(route, path.extname(route)) === 'index') continue
+        routes.push(route.substr(process.env.PWD.length + 1))
     }
-    let args = [ url ];
+    AppLogger.info("    [Routes] Loading src directory 'routes' from 'src/routes'.")
 
-    Array.prototype.push.apply( args , ctrl );
-    router[ method ].apply( router , args );
+    for (let route of routes) {
+        let ctrl = loader(route).default
+        let method = path.basename(route, path.extname(route))
+        let url = route.substr(10)
+        if (methods.indexOf(method) === -1) {
+            method = 'get'
+            url = url.substr(0, url.length - 3)
+        } else {
+            url = url.substr(0, url.length - method.length - 4)
+        }
+        let args = [ url ]
 
-    AppLogger.info(
-        sprintf( '        [%-5s %-30s     ---->   %-s' , method.toUpperCase() + ']' , url , route )
-    );
+        Array.prototype.push.apply(args, ctrl)
+        router[ method ].apply(router, args)
+
+        AppLogger.info(
+            sprintf('        [%-5s %-30s     ---->   %-s', method.toUpperCase() + ']', url, route)
+        )
+    }
+
+    AppLogger.info('    [Routes] Routes loaded successfully.')
+
+    return router.routes()
 }
-AppLogger.info( "    [Routes] Routes loaded successfully." );
-module.exports = router;
+
+export default loadRoutes

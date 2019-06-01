@@ -1,64 +1,61 @@
 /**
- * Created by devollove9 on 2017/9/19.
+ * Created by devollove9 on 2017/10/27.
  */
-let errors = load( 'constants/errors' );
-let queryValidator = load( 'middleware/queryValidator' );
-let permissionFilter = load( 'middleware/permissionFilter' );
+import { errors } from '@/constants'
+import { queryValidator, permissionFilter } from '@/middlewares'
 
-module.exports = [
-    queryValidator( load( 'validation/user/permission/put' ) ),
+import validation from '@/validations/user/permission/put'
+
+export default [
+    queryValidator(validation),
     permissionFilter(
         {
             role: 'superAdmin',
-            action: 'user.permission.put',
+            action: 'user.permission.get',
             criteria: {}
-        },{
+        }, {
             role: 'rootAdmin',
-            action:'user.permission.put',
-            criteria:{
-            }
-        },{
-            role:'owner',
-            action:'user.permission.put',
-            criteria:{
-            }
+            action: 'user.permission.get',
+            criteria: {}
+        }, {
+            role: 'owner',
+            action: 'user.permission.get',
+            criteria: {}
         }
     ),
-    async (next) => {
-        let permission;
-        if ( this.params.userId ) {
+    async (ctx, next) => {
+        let permission
+        if (ctx.params.userId) {
             permission = await models.Permission
                 .findOne()
-                .where( 'userId' ).equals( this.params.userId )
-                .lean().exec();
-        } else if ( this.params.permissionId ) {
+                .where('userId').equals(ctx.params.userId)
+        } else if (this.params.permissionId) {
             permission = await models.Permission
                 .findOne()
-                .where( 'permissionId' ).equals( this.params.permissionId )
-                .lean().exec();
+                .where('permissionId').equals(ctx.params.permissionId)
         }
-        
-        if ( ! permission ) {
-            throw errors.USER.USER_PERMISSION_NOT_EXIST;
+
+        if (!permission) {
+            throw errors.USER.USER_PERMISSION_NOT_EXIST
         }
-        for ( let p of ( this.params.permission || [] ) ) {
-            let perm = {};
-            perm.role = p.role;
-            perm.action = p.action;
-            perm.restrict = p.restrict;
-            perm.parameter = [];
-            for ( let k of Object.keys( p.parameter || {} ) ) {
+        for (let p of (this.params.permission || [])) {
+            let perm = {}
+            perm.role = p.role
+            perm.action = p.action
+            perm.restrict = p.restrict
+            perm.parameter = []
+            for (let k of Object.keys(p.parameter || {})) {
                 perm.parameter.push(
                     {
-                        key:k,
-                        value:p.parameter[ k ]
+                        key: k,
+                        value: p.parameter[ k ]
                     }
-                );
+                )
             }
-            permission.permission.push( perm );
+            permission.permission.push(perm)
         }
-        await permission.save();
-        send( this , permission );
-        await next();
+        await permission.save()
+        send(ctx, permission)
+        await next()
     }
-];
+]

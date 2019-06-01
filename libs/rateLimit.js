@@ -1,20 +1,16 @@
 /**
- * Created by devollove9 on 2017/9/19.
+ * Created by devollove9 on 2017/10/28.
  */
 /**
  * Module dependencies.
  */
 
-var debug = load('debug')('koa-ratelimit');
-var Limiter = load('ratelimiter');
-var ms = load('ms');
-var thenify = load('thenify');
+import Debug from 'debug'
+import Limiter from 'ratelimiter'
+import ms from 'ms'
+import thenify from 'thenify'
 
-/**
- * Expose `ratelimit()`.
- */
-
-module.exports = rateLimit;
+let debug = Debug('koa-ratelimit')
 
 /**
  * Initialize ratelimit middleware with the given `opts`:
@@ -29,40 +25,42 @@ module.exports = rateLimit;
  * @api public
  */
 
-function rateLimit(opts) {
-    opts = opts || {};
+const rateLimit = (opts) => {
+    opts = opts || {}
 
-    return function *(next){
-        var id = opts.id ? opts.id(this) : this.ip;
+    return async (ctx, next) => {
+        let id = opts.id ? opts.id(ctx) : ctx.ip
 
-        if (false === id) return yield* next;
+        if (id === false) return Promise.all(next())
 
         // initialize limiter
-        var limiter = new Limiter({ id: id, __proto__: opts });
-        limiter.get = thenify(limiter.get);
+        let limiter = new Limiter({ id: id, __proto__: opts })
+        limiter.get = thenify(limiter.get)
 
         // check limit
-        var limit = yield limiter.get();
+        let limit = await limiter.get()
 
         // check if current call is legit
-        var remaining = limit.remaining > 0 ? limit.remaining - 1 : 0;
+        let remaining = limit.remaining > 0 ? limit.remaining - 1 : 0
 
         // header fields
-        this.set('X-RateLimit-Limit', limit.total);
-        this.set('X-RateLimit-Remaining', remaining);
-        this.set('X-RateLimit-Reset', limit.reset);
-        this.set('X-RateLimit-RemainingTime',limit.reset * 1000 - new Date().getTime());
+        ctx.set('X-RateLimit-Limit', limit.total)
+        ctx.set('X-RateLimit-Remaining', remaining)
+        ctx.set('X-RateLimit-Reset', limit.reset)
+        ctx.set('X-RateLimit-RemainingTime', limit.reset * 1000 - new Date().getTime())
 
-        debug('remaining %s/%s %s', remaining, limit.total, id);
-        if (limit.remaining) return yield* next;
+        debug('remaining %s/%s %s', remaining, limit.total, id)
+        if (limit.remaining) return Promise.all(next())
 
-        var delta = (limit.reset * 1000) - Date.now() | 0;
-        var after = limit.reset - (Date.now() / 1000) | 0;
+        let delta = (limit.reset * 1000) - Date.now() | 0
+        let after = limit.reset - (Date.now() / 1000) | 0
         if (opts.throwable) {
-            throw opts.throwable(after,ms(delta, { long: true }));
+            throw opts.throwable(after, ms(delta, { long: true }))
         }
-        this.set('Retry-After', after);
-        this.status = 429;
-        this.body = 'Rate limit exceeded, retry in ' + ms(delta, { long: true });
+        ctx.set('Retry-After', after)
+        ctx.status = 429
+        ctx.body = 'Rate limit exceeded, retry in ' + ms(delta, { long: true })
     }
 }
+
+export default rateLimit

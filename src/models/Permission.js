@@ -1,27 +1,28 @@
 /**
- * Created by devollove9 on 2017/9/18.
+ * Created by devollove9 on 2017/10/27.
  */
-const mongoose = load( 'mongoose' );
+import mongoose from 'mongoose'
+
 const schema = new mongoose.Schema(
     {
-        userId:String,
-        permissionId:String,
-        permission:[
+        userId: String,
+        permissionId: String,
+        permission: [
             {
-                role:String,
-                action:[String],
-                restrict:[String],
-                parameter:[
+                role: String,
+                action: [String],
+                restrict: [String],
+                parameter: [
                     {
-                        key:String,
-                        value:String
+                        key: String,
+                        value: String
                     }
                 ]
             }
         ]
     },
     {
-        collection:'Permission'
+        collection: 'Permission'
     }
-);
-module.exports  = schema;
+)
+export default schema
