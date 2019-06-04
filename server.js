@@ -23,7 +23,6 @@ const server = (global) => {
   // Use routes
   app.use(router())
 
-  /*
   app.use(async (ctx, next) => {
     if (ctx.response.status !== 200) {
       ctx.response.status = 200
@@ -31,7 +30,7 @@ const server = (global) => {
     }
     await next()
   })
-  */
+
   return app
 }
 
