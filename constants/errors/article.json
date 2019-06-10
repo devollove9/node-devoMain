@@ -1,0 +1,10 @@
+{
+  "QUERY_ERROR":{
+    "errorCode":4000,
+    "errorMessage":"Can't process request query."
+  },
+  "ARTICLE_NOT_EXIST":{
+    "errorCode":4001,
+    "errorMessage":"This article does not exist."
+  }
+}

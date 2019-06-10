@@ -8,7 +8,7 @@ import _ from 'underscore'
 import validation from '@/validations/article/get'
 // import permission from '@/permissions/article/get'
 export default [
-    // queryValidator(validation),
+    queryValidator(validation),
   /*
     permissionFilter(
         {
@@ -43,7 +43,7 @@ export default [
         let filterBy = [];
         let filterOperator = [];
         let filterValue = [];
-        console.log(ctx.params)
+
         if (ctx.params.filterBy && ctx.params.filterOperator && ctx.params.filterValue) {
             filterBy = ctx.params.filterBy.split(',');
             filterOperator = ctx.params.filterOperator.split(',');
