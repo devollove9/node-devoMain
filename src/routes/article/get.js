@@ -59,7 +59,15 @@ export default [
 
         let result = await query.lean().exec();
 
-        send(ctx, result)
+        if (ctx.params.articleId) {
+          let content = await models.Content
+            .findOne()
+            .where('contentId').equals(result[0].contentId).lean().exec()
+
+          result[0].content = content.content || '';
+        }
+
+      send(ctx, result)
         await next()
     }
 ]

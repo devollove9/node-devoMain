@@ -7,12 +7,16 @@ import bodyParser from 'koa-bodyparser'
 import { errorHandler } from '@/middlewares'
 import { errors } from '@/constants'
 import router from '@/src/routes'
+import cors from '@koa/cors'
 
 let app = new Koa()
 
 const server = (global) => {
   // Use bodyParser middleware
   app.use(bodyParser())
+
+  // Allow corss origin
+  app.use(cors())
 
   // Use error handler
   app.use(errorHandler())

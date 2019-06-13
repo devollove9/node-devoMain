@@ -1,7 +1,7 @@
 /**
  * Created by devollove9 on 2017/10/27.
  */
-import string from 'underscore.string'
+import stringUtil from 'underscore.string'
 import microtime from 'microtime'
 
 export default (machineId, groupId) => {

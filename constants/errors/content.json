@@ -1,0 +1,10 @@
+{
+  "QUERY_ERROR":{
+    "errorCode":5000,
+    "errorMessage":"Can't process request query."
+  },
+  "CONTENT_NOT_EXIST":{
+    "errorCode":5001,
+    "errorMessage":"This content does not exist."
+  }
+}

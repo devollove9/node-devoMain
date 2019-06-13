@@ -3,8 +3,8 @@
  */
 import { errors } from '@/constants'
 import { queryValidator, permissionFilter } from '@/middlewares'
-
-import validation from '@/validations/article/get'
+import { idGenerator } from '@/libs'
+import validation from '@/validations/article/post'
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
@@ -41,23 +41,27 @@ export default [
       .where('userId').equals(ctx.params.userId);
 
     if (!user) throw errors.AUTHENTICATION.USER_NOT_EXIST;
+    model.articleId = idGenerator();
+    model.userId = ctx.params.userId;
+    const placeDate = new Date().getTime();
 
     let content = new models.Content();
     content.contentId = idGenerator();
     content.articleId = model.articleId;
-    content.userId = model.userId;
-    content.content = model.content;
+    content.userId = user.userId;
+    content.content = ctx.params.content;
     content.placeDate = placeDate;
     await content.save();
 
-    model.userId = user.userId;
-    model.articleId = idGenerator();
+
+
     model.title = ctx.params.title;
     model.authorName = ctx.params.authorName;
     model.rating = 0;
     model.viewCount = 0;
     model.uniqueViewCount = 0;
     model.contentId = content.contentId;
+    model.publishDate = placeDate;
 
     await model.save();
     send(ctx, model);

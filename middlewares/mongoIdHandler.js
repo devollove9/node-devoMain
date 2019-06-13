@@ -5,11 +5,11 @@ import deepFilter from 'deep-filter'
 
 const mongoIdHandler = () => {
     return async (ctx, next) => {
-        let body
-        body = JSON.parse(ctx.body)
-        body.data = body.data || []
+        let body;
+        body = JSON.parse(ctx.body);
+        body.data = body.data || [];
         body.data = deepFilter(body.data, (value, prop, subject) => {
-            return prop !== '_id'
+            return prop !== '_id' && prop !== '__v';
         })
         ctx.body = JSON.stringify(body)
         await next()
