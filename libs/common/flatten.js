@@ -7,14 +7,14 @@ const flatten = (obj) => {
     for (let i in obj) {
         if (!obj.hasOwnProperty(i)) continue
 
-        if (obj[i].constructor == Object) {
+        if (obj[i].constructor === Object) {
             let flatObject = flatten(obj[i])
             for (let x in flatObject) {
                 if (!flatObject.hasOwnProperty(x)) continue
                 toReturn[i + '.' + x] = flatObject[x]
             }
         } else {
-            toReturn[i] = ob[i]
+            toReturn[i] = obj[i]
         }
     }
     return toReturn

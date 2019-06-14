@@ -3,8 +3,8 @@
  */
 import { errors } from '@/constants'
 import { queryValidator, permissionFilter } from '@/middlewares'
-import { idGenerator, flatten } from '@/libs'
-import validation from '@/validations/article/put'
+
+import validation from '@/validations/article/articleToCategory/post'
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
@@ -35,27 +35,29 @@ export default [
     ),
 */
   async (ctx, next) => {
-    let model = await models.Article
+    let article = await models.Article
       .findOne()
       .where('articleId').equals(ctx.params.articleId)
-    if (! model) throw errors.ARTICLE.ARTICLE_NOT_EXIST;
+    if (! article) throw errors.ARTICLE.ARTICLE_NOT_EXIST;
 
-    if (ctx.params.content) {
-      const placeDate = new Date().getTime();
-      let content = new models.Content();
-      content.contentId = idGenerator();
-      content.articleId = model.articleId;
-      content.userId = model.userId;
-      content.content = ctx.params.content;
-      content.placeDate = placeDate;
-      await content.save();
-      ctx.params.contentId = content.contentId;
-      ctx.params.updateDate = placeDate;
-    }
+    let category = await models.ArticleCategory
+      .findOne()
+      .where('articleCategoryId').equals(ctx.params.articleCategoryId)
+    if (! category) throw errors.ARTICLE.ARTICLECATEGORY_NOT_EXIST;
 
+    let record = await models.ArticleToCategory
+      .findOne()
+      .where('articleId').equals(ctx.params.articleId)
+      .where('articleCategoryId').equals(ctx.params.articleCategoryId);
 
-    await model.update(flatten(ctx.params)).exec();
-    send(ctx, model);
+    if (record) throw errors.ARTICLE.CATEGORY_ALREADY_EXIST;
+
+    let model = new models.ArticleToCategory();
+    model.articleId = ctx.params.articleId;
+    model.articleCategoryId = ctx.params.articleCategoryId;
+
+    await model.save();
+    send(ctx, {result: 'Success'});
     await next();
   }
 ]

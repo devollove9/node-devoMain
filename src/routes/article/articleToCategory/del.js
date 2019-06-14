@@ -3,8 +3,9 @@
  */
 import { errors } from '@/constants'
 import { queryValidator, permissionFilter } from '@/middlewares'
-import { idGenerator, flatten } from '@/libs'
-import validation from '@/validations/article/put'
+import { flatten } from '@/libs'
+import validation from '@/validations/article/articleToCategory/del'
+
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
@@ -35,27 +36,14 @@ export default [
     ),
 */
   async (ctx, next) => {
-    let model = await models.Article
-      .findOne()
+    let model = await models.ArticleToCategory
+      .findOneAndRemove()
+      .where('articleCategoryId').equals(ctx.params.articleCategoryId)
       .where('articleId').equals(ctx.params.articleId)
-    if (! model) throw errors.ARTICLE.ARTICLE_NOT_EXIST;
 
-    if (ctx.params.content) {
-      const placeDate = new Date().getTime();
-      let content = new models.Content();
-      content.contentId = idGenerator();
-      content.articleId = model.articleId;
-      content.userId = model.userId;
-      content.content = ctx.params.content;
-      content.placeDate = placeDate;
-      await content.save();
-      ctx.params.contentId = content.contentId;
-      ctx.params.updateDate = placeDate;
-    }
+    if (! model) throw errors.ARTICLE.CATEGORY_NOT_EXIST_IN_ARTICLE;
 
-
-    await model.update(flatten(ctx.params)).exec();
-    send(ctx, model);
+    send(ctx, {result: 'Success'});
     await next();
   }
 ]

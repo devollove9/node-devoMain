@@ -5,7 +5,7 @@ import { errors } from '@/constants'
 import { queryValidator, permissionFilter } from '@/middlewares'
 import _ from 'underscore'
 
-import validation from '@/validations/article/get'
+import validation from '@/validations/article/articleToCategory/get'
 // import permission from '@/permissions/article/get'
 export default [
     queryValidator(validation),
@@ -36,8 +36,9 @@ export default [
     ),
 */
     async (ctx, next) => {
-        let query = models.Article;
+        let query = models.ArticleToCategory;
         let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue');
+
         query = query.find(copyOfQuery);
 
         let filterBy = [];
@@ -58,25 +59,6 @@ export default [
         }
 
         let result = await query.lean().exec();
-
-        if (ctx.params.articleId) {
-          let content = await models.Content
-            .findOne()
-            .where('contentId').equals(result[0].contentId).lean().exec();
-
-          result[0].content = content.content || '';
-
-          let categories = await models.ArticleToCategory
-            .find()
-            .where('articleId').equals(ctx.params.articleId).lean().exec();
-
-          let categoryIds = [];
-          categories.forEach( c => categoryIds.push(c.articleCategoryId));
-
-          result[0].categories = await models.ArticleCategory
-            .find({'articleCategoryId': { $in: categoryIds}}).select('-__v').select('-_id').lean().exec();
-
-        }
 
         send(ctx, result)
         await next()

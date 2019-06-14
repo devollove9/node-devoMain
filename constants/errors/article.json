@@ -6,5 +6,21 @@
   "ARTICLE_NOT_EXIST":{
     "errorCode":4001,
     "errorMessage":"This article does not exist."
+  },
+  "ARTICLECATEGORY_ALREADY_EXIST":{
+    "errorCode":4001,
+    "errorMessage":"This article already exist."
+  },
+  "ARTICLECATEGORY_NOT_EXIST": {
+    "errorCode":4002,
+    "errorMessage":"This article category does not exist."
+  },
+  "CATEGORY_ALREADY_EXIST": {
+    "errorCode":4003,
+    "errorMessage":"This article already has the category."
+  },
+  "CATEGORY_NOT_EXIST_IN_ARTICLE": {
+    "errorCode":4004,
+    "errorMessage":"Category does not exist in requested article."
   }
 }

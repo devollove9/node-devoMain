@@ -5,6 +5,7 @@ const schema = new mongoose.Schema(
     articleId: String,
     userId: String,
     publishDate: Number,
+    updateDate: Number,
     viewCount: Number,
     uniqueViewCount: Number,
     title: String,

@@ -8,7 +8,7 @@ import { mongoIdHandler } from '@/middlewares'
 import path from 'path'
 
 const loadRoutes = () => {
-    let methods = [ 'get', 'post', 'delete', 'put' ];
+    let methods = [ 'get', 'post', 'del', 'put' ];
     let sprintf = Sprintf.sprintf;
     let router = Router();
     let routesDirty = walk(__dirname);
