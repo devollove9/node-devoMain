@@ -59,23 +59,25 @@ export default [
 
         let result = await query.lean().exec();
 
+        for (let r of result) {
+          let categories = await models.ArticleToCategory
+            .find()
+            .where('articleId').equals(r.articleId).lean().exec();
+
+          let categoryIds = [];
+          categories.forEach( c => categoryIds.push(c.articleCategoryId));
+
+          r.categories = await models.ArticleCategory
+            .find({'articleCategoryId': { $in: categoryIds}}).select('-__v').select('-_id').lean().exec();
+        }
+        
+        // console.log(result);
         if (ctx.params.articleId) {
           let content = await models.Content
             .findOne()
             .where('contentId').equals(result[0].contentId).lean().exec();
 
           result[0].content = content.content || '';
-
-          let categories = await models.ArticleToCategory
-            .find()
-            .where('articleId').equals(ctx.params.articleId).lean().exec();
-
-          let categoryIds = [];
-          categories.forEach( c => categoryIds.push(c.articleCategoryId));
-
-          result[0].categories = await models.ArticleCategory
-            .find({'articleCategoryId': { $in: categoryIds}}).select('-__v').select('-_id').lean().exec();
-
         }
 
         send(ctx, result)

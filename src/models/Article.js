@@ -11,7 +11,7 @@ const schema = new mongoose.Schema(
     title: String,
     authorName: String,
     rating: Number,
-    contentId: String,
+    contentId: String
   },
   {
     collection: 'Article'
