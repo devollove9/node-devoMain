@@ -51,9 +51,17 @@ export default [
     content.userId = user.userId;
     content.content = ctx.params.content;
     content.placeDate = placeDate;
+    content.updateDate = placeDate;
     await content.save();
 
-
+    if (ctx.params.categories) {
+      ctx.params.categories.forEach( async c => {
+        let ac = new models.ArticleToCategory();
+        ac.articleCategoryId = c;
+        ac.articleId = model.articleId;
+        await ac.save();
+      })
+    }
 
     model.title = ctx.params.title;
     model.authorName = ctx.params.authorName;

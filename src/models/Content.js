@@ -12,4 +12,5 @@ const schema = new mongoose.Schema(
     collection: 'Content'
   }
 )
+schema.index({content: 'text'})
 export default schema

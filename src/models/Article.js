@@ -17,4 +17,5 @@ const schema = new mongoose.Schema(
     collection: 'Article'
   }
 )
+schema.index({name: 'text', title: 'text', authorName: 'text'})
 export default schema

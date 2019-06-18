@@ -36,9 +36,13 @@ export default [
     ),
 */
     async (ctx, next) => {
+        let page = ctx.params.page || 0;
+        let limit = ctx.params.limit || 10;
+        let skip = page * limit;
         let query = models.Article;
         let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue');
-        query = query.find(copyOfQuery);
+        query = query.find(copyOfQuery).sort({updateDate:-1}).skip(skip)
+        .limit(limit);
 
         let filterBy = [];
         let filterOperator = [];
@@ -70,7 +74,7 @@ export default [
           r.categories = await models.ArticleCategory
             .find({'articleCategoryId': { $in: categoryIds}}).select('-__v').select('-_id').lean().exec();
         }
-        
+
         // console.log(result);
         if (ctx.params.articleId) {
           let content = await models.Content
