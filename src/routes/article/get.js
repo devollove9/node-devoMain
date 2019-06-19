@@ -40,7 +40,7 @@ export default [
         let limit = ctx.params.limit || 10;
         let skip = page * limit;
         let query = models.Article;
-        let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue');
+        let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue', 'page', 'limit');
         query = query.find(copyOfQuery).sort({updateDate:-1}).skip(skip)
         .limit(limit);
 
@@ -82,6 +82,11 @@ export default [
             .where('contentId').equals(result[0].contentId).lean().exec();
 
           result[0].content = content.content || '';
+
+          let article = await models.Article
+            .findOne()
+            .where('articleId').equals(result[0].articleId)
+          await article.update({viewCount: result[0].viewCount + 1}).lean().exec();
         }
 
         send(ctx, result)

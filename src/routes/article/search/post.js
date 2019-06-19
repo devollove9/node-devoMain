@@ -37,10 +37,12 @@ export default [
 */
   async (ctx, next) => {
     let query = models.Article;
-    let page = ctx.params.page || 0;
-    let limit = ctx.params.limit || 10;
-    const skip = page * limit
-    let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue');
+    let query2 = models.Article;
+    let page = ctx.params.page || 1;
+    let limit = 10;
+    if (ctx.params.limit !== undefined) limit = ctx.params.limit
+    const skip = (page - 1)* limit
+    let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue', 'page', 'limit');
     let idList = [];
     if (ctx.params.name)  {
       if (ctx.params.name.length > 0) {
@@ -89,14 +91,16 @@ export default [
       } else {
         dataParams.$and = and;
       }
-      query = query.find(dataParams).sort({updateDate:-1}).skip(skip)
-        .limit(limit);
-
+      query = query.find(dataParams).sort({updateDate:-1})
+      query2 = query2.find(dataParams).sort({updateDate:-1})
     } else if (idList.length > 0) {
-        query = query.find({articleId: {$in: idList}}).sort({updateDate:-1}).skip(skip)
-          .limit(limit);
-    } else query = query.find(copyOfQuery).sort({updateDate:-1}).skip(skip)
-      .limit(limit);
+        query = query.find({articleId: {$in: idList}}).sort({updateDate:-1})
+        query2 = query2.find({articleId: {$in: idList}}).sort({updateDate:-1})
+    } else {
+      query = query.find(copyOfQuery).sort({updateDate:-1})
+      query2 = query2.find(copyOfQuery).sort({updateDate:-1})
+
+    }
 
     let filterBy = [];
     let filterOperator = [];
@@ -115,7 +119,9 @@ export default [
       query = query.where(filterBy[i])[filterOperator[i]](isNaN(filterValue[i])?filterValue[i]:Number(filterValue[i]));
     }
 
+    query = query.skip(skip).limit(limit);
     let result = await query.lean().exec();
+    const total = await query2.count().lean().exec();
 
     for (let r of result) {
       let categories = await models.ArticleToCategory
@@ -124,18 +130,17 @@ export default [
 
       let categoryIds = [];
       categories.forEach( c => categoryIds.push(c.articleCategoryId));
-
+      r.total = total;
       r.categories = await models.ArticleCategory
         .find({'articleCategoryId': { $in: categoryIds}}).select('-__v').select('-_id').lean().exec();
     }
 
-    // console.log(result);
     if (ctx.params.articleId) {
       let content = await models.Content
         .findOne()
         .where('contentId').equals(result[0].contentId).lean().exec();
 
-      result[0].content = content.content || '';
+      result[0].content = contnt.content || '';
     }
 
     send(ctx, result)

@@ -39,9 +39,9 @@ export default [
       .findOne()
       .where('articleId').equals(ctx.params.articleId)
     if (! model) throw errors.ARTICLE.ARTICLE_NOT_EXIST;
-
+    const placeDate = new Date().getTime();
+    ctx.params.updateDate = placeDate;
     if (ctx.params.content) {
-      const placeDate = new Date().getTime();
       let content = new models.Content();
       content.contentId = idGenerator();
       content.articleId = model.articleId;
@@ -50,7 +50,6 @@ export default [
       content.placeDate = placeDate;
       await content.save();
       ctx.params.contentId = content.contentId;
-      ctx.params.updateDate = placeDate;
     }
 
 
