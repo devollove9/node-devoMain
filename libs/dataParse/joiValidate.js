@@ -11,7 +11,7 @@ joi.id = () => {
 
 joi.username = () => {
     return [
-        joi.string().email().allow('').required()
+        joi.string().email().required()
         // joi.string().regex( /[0-9]{10}$/ ).allow( '' ).required()
     ]
 }
