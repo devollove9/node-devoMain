@@ -10,17 +10,21 @@ joi.id = () => {
 }
 
 joi.username = () => {
-    return [
-        joi.string().email().required()
+    return joi.string().email()
         // joi.string().regex( /[0-9]{10}$/ ).allow( '' ).required()
-    ]
+
+}
+
+joi.password = () => {
+  return joi.string().hex().length(32)
+    // joi.string().regex( /[0-9]{10}$/ ).allow( '' ).required()
+
 }
 
 joi.usernameRegister = () => {
-    return [
-        joi.string().email().required()
-        // joi.string().regex( /[0-9]{10}$/ ).required()
-    ]
+  return joi.string().email().required()
+  // joi.string().regex( /[0-9]{10}$/ ).allow( '' ).required()
+
 }
 
 joi.stringArray= () => {
