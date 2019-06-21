@@ -22,7 +22,7 @@ import joiValidate from './dataParse/joiValidate'
 
 import saveRedisSession from './redis/saveRedisSession'
 
-import crypt from './encryption/crypt'
+// import crypt from './encryption/crypt'
 
 import idGenerator from './idGenerator'
 import rateLimit from './rateLimit'
@@ -38,7 +38,7 @@ const iLib = {
 
     saveRedisSession: saveRedisSession,
 
-    crypt: crypt,
+    // crypt: crypt,
 
     idGenerator: idGenerator,
     loader: loader,
@@ -52,7 +52,7 @@ export {
     flatten,
     joiValidate,
     saveRedisSession,
-    crypt,
+    // crypt,
     idGenerator,
     loader,
     rateLimit
