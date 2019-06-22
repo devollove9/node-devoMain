@@ -8,32 +8,26 @@ import validation from '@/validations/article/category/post'
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
-  /*
+
     permissionFilter(
+      [
         {
-            role: 'user',
-            action: 'user.get',
-            criteria: {
-                '_userId': ':userId'
-            }
+          role: 'operator',
+          action: 'article.category.post',
+          criteria: {}
         },
         {
-            role: 'operator',
-            action: 'user.get',
-            criteria: {}
+          role: 'manager',
+          action: 'article.category.post',
+          criteria: {}
         },
         {
-            role: 'store',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role:'admin',
-            action:'user.get',
-            criteria:{}
+          role:'admin',
+          action:'article.category.post',
+          criteria:{}
         }
+      ]
     ),
-*/
   async (ctx, next) => {
     let model = new models.ArticleCategory();
     let name = await models.ArticleCategory

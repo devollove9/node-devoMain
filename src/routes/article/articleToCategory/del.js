@@ -9,33 +9,41 @@ import validation from '@/validations/article/articleToCategory/del'
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
-  /*
-    permissionFilter(
-        {
-            role: 'user',
-            action: 'user.get',
-            criteria: {
-                '_userId': ':userId'
-            }
-        },
-        {
-            role: 'operator',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role: 'store',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role:'admin',
-            action:'user.get',
-            criteria:{}
-        }
-    ),
-*/
+  permissionFilter(
+    [
+      {
+          role: 'user',
+          action: 'article.articleToCategory.del',
+          criteria: {
+          }
+      },
+      {
+          role: 'operator',
+          action: 'article.articleToCategory.del',
+          criteria: {
+          }
+      },
+      {
+          role: 'manager',
+          action: 'article.articleToCategory.del',
+          criteria: {}
+      },
+      {
+          role:'admin',
+          action:'article.articleToCategory.del',
+          criteria:{}
+      }
+    ]
+  ),
   async (ctx, next) => {
+    let article = await models.Article
+      .findOne()
+      .where('articleId').equals(ctx.params.articleId)
+
+    if (! article) throw errors.ARTICLE.ARTICLE_NOT_EXIST
+    if (ctx.roles.includes('user') && ctx.roles.length === 1) {
+      if (article.userId !== ctx.token.userId) throw errors.ARTICLE.TRYING_TO_DELETE_OTHER_USER
+    }
     let model = await models.ArticleToCategory
       .findOneAndRemove()
       .where('articleCategoryId').equals(ctx.params.articleCategoryId)

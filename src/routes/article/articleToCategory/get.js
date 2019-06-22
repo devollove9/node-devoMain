@@ -9,32 +9,22 @@ import validation from '@/validations/article/articleToCategory/get'
 // import permission from '@/permissions/article/get'
 export default [
     queryValidator(validation),
-  /*
     permissionFilter(
+      [
+        {
+          role: 'public',
+          action: 'article.articleToCategory.get',
+          criteria: {
+          }
+        },
         {
             role: 'user',
-            action: 'user.get',
+            action: 'article.articleToCategory.get',
             criteria: {
-                '_userId': ':userId'
             }
-        },
-        {
-            role: 'operator',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role: 'store',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role:'admin',
-            action:'user.get',
-            criteria:{}
         }
+      ]
     ),
-*/
     async (ctx, next) => {
         let query = models.ArticleToCategory;
         let copyOfQuery = _.omit(ctx.params, 'filterBy', 'filterOperator', 'filterValue');

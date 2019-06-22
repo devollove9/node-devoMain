@@ -8,32 +8,17 @@ import validation from '@/validations/article/post'
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
-  /*
     permissionFilter(
+      [
         {
             role: 'user',
-            action: 'user.get',
+            action: 'article.post',
             criteria: {
                 '_userId': ':userId'
             }
-        },
-        {
-            role: 'operator',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role: 'store',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role:'admin',
-            action:'user.get',
-            criteria:{}
         }
+      ]
     ),
-*/
   async (ctx, next) => {
     let model = new models.Article();
     let user = await models.User

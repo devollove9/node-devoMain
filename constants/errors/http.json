@@ -1,6 +1,34 @@
 {
+  "400":{
+    "errorCode":400,
+    "errorMessage":"Bad request"
+  },
+  "401":{
+    "errorCode":401,
+    "errorMessage":"Unauthorized"
+  },
+  "403":{
+    "errorCode":403,
+    "errorMessage":"Permission denied, you don't have access to this resource"
+  },
+  "404":{
+    "errorCode":404,
+    "errorMessage":"Request resource not found"
+  },
+  "408":{
+    "errorCode":408,
+    "errorMessage":"Request timed out"
+  },
   "422":{
     "errorCode":422,
-    "errorMessage":"Request is not acceptable."
+    "errorMessage":"Request can not be processed"
+  },
+  "500":{
+    "errorCode":500,
+    "errorMessage":"Internal server error"
+  },
+  "502":{
+    "errorCode":502,
+    "errorMessage":"Bad gateway"
   }
 }

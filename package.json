@@ -41,7 +41,7 @@
   },
   "scripts": {
     "test": "test",
-    "start": "node start.js",
+    "start": "NODE_ENV=debug node start.js",
     "doc": "node --harmony --use_strict build-tools/build-route.js"
   },
   "_moduleAliases": {

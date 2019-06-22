@@ -2,8 +2,9 @@
  * Created by devollove9 on 2017/10/26.
  */
 import Sprintf from 'sprintf'
-
+import { idGenerator } from '@/libs'
 let sprintf = Sprintf.sprintf
+
 const errorHanlder = () => {
     let errorHandler = async (ctx, next) => {
         let error, start
@@ -78,15 +79,17 @@ const errorHanlder = () => {
             }
         }
         if (error === undefined) {
-            let status = ctx.response.status
-            logger.info(
+            if (process.env.NODE_ENV === 'debug') {
+              let status = ctx.response.status
+              logger.info(
                 sprintf(
-                    '%-4s %-5d  %-30s  %-15s  %dms',
-                    ctx.request.method,
-                    status,
-                    ctx.request.url,
-                    ctx.request.header['x-forwarded-for'] || ctx.request.header['x-real-ip'],
-                    new Date() - start))
+                  '%-4s %-5d  %-30s  %-15s  %dms',
+                  ctx.request.method,
+                  status,
+                  ctx.request.url,
+                  ctx.request.header['x-forwarded-for'] || ctx.request.header['x-real-ip'],
+                  new Date() - start))
+            }
         }
     }
     return errorHandler

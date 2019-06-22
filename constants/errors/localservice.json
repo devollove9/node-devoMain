@@ -1,0 +1,12 @@
+{
+  "REDIS":{
+    "GET":{
+      "errorCode":11001,
+      "errorMessage":"Internal error"
+    },
+    "SETEX":{
+      "errorCode":11002,
+      "errorMessage":"Internal error"
+    }
+  }
+}

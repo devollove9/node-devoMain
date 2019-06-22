@@ -29,4 +29,5 @@ const schema = new mongoose.Schema(
         collection: 'User'
     }
 )
+schema.index({userId: 1}, {username: 1}, {registerDate: 1}, {lastLoginDate: 1})
 export default schema

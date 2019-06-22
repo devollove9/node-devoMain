@@ -2,6 +2,9 @@
   "apps" : [{
     "name"      :"Node-Gen",
     "cwd"       :"/home/ubuntu/node-gen",
-    "script"    :"./start.js"
+    "script"    :"./start.js",
+    "env": {
+      "NODE_ENV": "production"
+    }
   }]
 }

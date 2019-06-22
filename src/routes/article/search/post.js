@@ -9,32 +9,23 @@ import validation from '@/validations/article/search/post'
 // import permission from '@/permissions/article/post'
 export default [
   queryValidator(validation),
-  /*
-    permissionFilter(
-        {
-            role: 'user',
-            action: 'user.get',
-            criteria: {
-                '_userId': ':userId'
-            }
-        },
-        {
-            role: 'operator',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role: 'store',
-            action: 'user.get',
-            criteria: {}
-        },
-        {
-            role:'admin',
-            action:'user.get',
-            criteria:{}
+  permissionFilter(
+    [
+      {
+        role: 'public',
+        action: 'article.search.post',
+        criteria: {
+
         }
-    ),
-*/
+      },
+      {
+        role: 'user',
+        action: 'article.search.post',
+        criteria: {
+        }
+      }
+    ]
+  ),
   async (ctx, next) => {
     let query = models.Article;
     let query2 = models.Article;

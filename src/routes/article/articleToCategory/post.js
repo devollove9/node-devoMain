@@ -8,38 +8,40 @@ import validation from '@/validations/article/articleToCategory/post'
 // import permission from '@/permissions/article/get'
 export default [
   queryValidator(validation),
-  /*
     permissionFilter(
+      [
         {
-            role: 'user',
-            action: 'user.get',
-            criteria: {
-                '_userId': ':userId'
-            }
+          role: 'user',
+          action: 'article.articleToCategory.post',
+          criteria: {
+          }
         },
         {
-            role: 'operator',
-            action: 'user.get',
-            criteria: {}
+          role: 'operator',
+          action: 'article.articleToCategory.post',
+          criteria: {
+          }
         },
         {
-            role: 'store',
-            action: 'user.get',
-            criteria: {}
+          role: 'manager',
+          action: 'article.articleToCategory.post',
+          criteria: {}
         },
         {
-            role:'admin',
-            action:'user.get',
-            criteria:{}
+          role:'admin',
+          action:'article.articleToCategory.post',
+          criteria:{}
         }
+      ]
     ),
-*/
   async (ctx, next) => {
     let article = await models.Article
       .findOne()
       .where('articleId').equals(ctx.params.articleId)
     if (! article) throw errors.ARTICLE.ARTICLE_NOT_EXIST;
-
+    if (ctx.roles.includes('user') && ctx.roles.length === 1) {
+      if (article.userId !== ctx.token.userId) throw errors.ARTICLE.TRYING_TO_POST_OTHER_USER
+    }
     let category = await models.ArticleCategory
       .findOne()
       .where('articleCategoryId').equals(ctx.params.articleCategoryId)

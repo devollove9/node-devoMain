@@ -5,6 +5,7 @@
 import ARTICLE from './article.json'
 import AUTHENTICATION from './authentication.json'
 import CONTENT from './content.json'
+import LOCALSERVICE from './localservice.json'
 import HTTP from './http.json'
 import SERVICE from './service.json'
 import USER from './user.json'
@@ -16,5 +17,6 @@ export default {
     CONTENT: CONTENT, //5xxx
     //"AUTHORIZATION":load('constants/errors/authorization'), //2xxx
     SERVICE: SERVICE,
-    USER: USER //4xxx
+    USER: USER, //6xxx,
+    LOCALSERVICE: LOCALSERVICE //11xxx
 };

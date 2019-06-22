@@ -4,7 +4,7 @@
 import Koa from 'koa'
 import compress from 'koa-compress'
 import bodyParser from 'koa-bodyparser'
-import { errorHandler } from '@/middlewares'
+import { authenticationGateway, errorHandler } from '@/middlewares'
 import { errors } from '@/constants'
 import router from '@/src/routes'
 import cors from '@koa/cors'
@@ -21,6 +21,9 @@ const server = (global) => {
   // Use error handler
   app.use(errorHandler())
 
+  // User auth gateway
+  app.use(authenticationGateway())
+
   // Use gizp encoding
   app.use(compress())
 
@@ -29,8 +32,11 @@ const server = (global) => {
 
   app.use(async (ctx, next) => {
     if (ctx.response.status !== 200) {
+      if (errors.HTTP[ctx.response.status.toString()]) {
+        throw errors.HTTP[ctx.response.status.toString()]
+      }
       ctx.response.status = 200
-      throw errors.HTTP['422']
+      throw errors.HTTP['404']
     }
     await next()
   })

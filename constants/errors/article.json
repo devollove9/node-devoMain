@@ -30,5 +30,13 @@
   "CATEGORY_HAS_NO_ARTICLE": {
     "errorCode":4006,
     "errorMessage":"Category does not contain any article."
+  },
+  "TRYING_TO_DELETE_OTHER_USER": {
+    "errorCode":4007,
+    "errorMessage":"Unknown error."
+  },
+  "TRYING_TO_POST_OTHER_USER": {
+    "errorCode":4008,
+    "errorMessage":"Unknown error."
   }
 }

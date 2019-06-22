@@ -1,19 +1,23 @@
 {
   "UNAUTHORIZED":{
-    "errorCode":2001,
-    "errorMessage":"You are not authorized to this resource"
+    "errorCode": 2001,
+    "errorMessage": "You are not authorized to this resource"
   },
   "USERNAME_PASSWORD_INCORRECT":{
-    "errorCode":2002,
-    "errorMessage":"Your username or password is incorrect"
+    "errorCode": 2002,
+    "errorMessage":" Your username or password is incorrect"
   },
   "USER_NOT_EXIST":{
-    "errorCode":2003,
-    "errorMessage":"This user does not exist"
+    "errorCode": 2003,
+    "errorMessage": "This user does not exist"
   },
   "USER_DISABLED":{
-    "errorCode":2004,
-    "errorMessage":"This user has been disabled"
+    "errorCode": 2004,
+    "errorMessage": "This user has been disabled"
+  },
+  "AUTHENTICATION_FAILURE": {
+    "errorCode": 2005,
+    "errorMessage": "Fail to authenticate"
   }
 
 }

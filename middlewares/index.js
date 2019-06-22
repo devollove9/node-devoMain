@@ -9,17 +9,19 @@
  *  deepcopy
  *  underscore
  */
+import authenticationGateway from './authenticationGateway'
 import errorHandler from './errorHandler'
 import permissionFilter from './permissionFilter'
 import queryValidator from './queryValidator'
 import mongoIdHandler from './mongoIdHandler'
 
 const middleware = {
+    authenticationGateway: authenticationGateway,
     errorHandler: errorHandler,
     permissionFilter: permissionFilter,
     queryValidator: queryValidator,
     mongoIdHandler: mongoIdHandler
 }
 
-export { errorHandler, permissionFilter, queryValidator, mongoIdHandler }
+export { authenticationGateway, errorHandler, permissionFilter, queryValidator, mongoIdHandler }
 export default middleware

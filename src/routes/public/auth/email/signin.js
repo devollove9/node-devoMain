@@ -2,7 +2,7 @@ import { errors } from '@/constants'
 import { queryValidator } from '@/middlewares'
 import crypt from '@/libs/encryption/crypt'
 import validation from '@/validations/public/auth/email/signin'
-import { saveRedisSession } from '@/libs'
+import { saveRedisSession, idGenerator } from '@/libs'
 import Chance from 'chance'
 const chance = new Chance()
 
@@ -31,8 +31,8 @@ export default [
     let userSession = {}
 
     userSession.modelPermission = modelPermission
-    userSession.maxAge = ctx.params.maxAge > 144000 ? 144000 : ctx.params.maxAge
-    userSession.token = chance.hash() + ((new Date().getTime())*1000).toString(16)
+    userSession.maxAge = ctx.params.maxAge < 144000 ? 144000 : ctx.params.maxAge
+    userSession.token = chance.hash({length: 112}) + ((new Date().getTime())*1000).toString(16)
     userSession.userId = user.userId
     userSession.credential = 'username'
     userSession.username = user.username
@@ -55,7 +55,7 @@ export default [
       userSession.role.push(permission.role)
     }
     let result = await saveRedisSession(userSession, redis)
-    if (result.toString() !== 'OK') throw errors.DEPENDENCY.REDIS.SETEX
+    if (result.toString() !== 'OK') throw errors.LOCALSERVICE.REDIS.SETEX
 
     try {
       let userInfo = await models.User
@@ -66,6 +66,24 @@ export default [
       if (userInfo) userInfo.lastLoginDate = new Date().getTime();
       await userInfo.save();
     } catch (e) {}
+
+    const al = new models.AccessLog(
+      {
+        userId: user.userId,
+        accessId: idGenerator(),
+        placeDate: new Date().getTime(),
+        requestMethod: ctx.request.method,
+        actionType: ctx.request.url,
+        ipReal: ctx.request.header['x-real-ip'],
+        ipForward: ctx.request.header['x-forwarded-for'],
+        platform: ctx.request.header['user-agent'],
+        host: ctx.request.header.host,
+        origin: ctx.request.header.origin,
+        referer: ctx.request.header.referer,
+        status: 200
+      }
+    )
+    await al.save();
 
     send(ctx, userSession)
     await next()

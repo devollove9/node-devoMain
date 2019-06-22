@@ -15,7 +15,7 @@ global.ENV = {};
 global.load = loader
 
 // Main Flow
-co(async function () {
+co(async () => {
   // let context = {};
 
   // Logger
@@ -34,12 +34,11 @@ co(async function () {
   app.listen(ENV.SERVER_PORT)
   AppLogger.info('');
   AppLogger.info('****************************************************************');
-  AppLogger.info('*********** Server started,listening on port:' + ENV.SERVER_PORT + ' **************');
+  AppLogger.info('          Server started ['+process.env.NODE_ENV.toUpperCase() + '],listening on port:' + ENV.SERVER_PORT);
   AppLogger.info('****************************************************************');
   console.log(String.fromCharCode(23));
 
-}).catch(function (err) {
+}).catch((err) => {
   console.error(err)
   console.error(err.stack || '')
-  // NR.noticeError(err);
 })
