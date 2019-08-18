@@ -7,6 +7,14 @@
     "SETEX":{
       "errorCode":11002,
       "errorMessage":"Internal error"
+    },
+    "SETEXPRETOKEN":{
+      "errorCode":11002,
+      "errorMessage":"Internal error"
+    },
+    "SETEXPIREUSER":{
+      "errorCode":11003,
+      "errorMessage":"Internal error"
     }
   }
 }
