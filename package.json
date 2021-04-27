@@ -25,7 +25,7 @@
     "nodemailer": "^6.2.1",
     "nodemailer-ses-transport": "^1.5.1",
     "ratelimiter": "^3.3.0",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "sprintf": "^0.1.5",
     "thenify": "^3.3.0",
     "underscore": "^1.9.1",
