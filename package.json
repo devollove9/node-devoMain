@@ -28,7 +28,7 @@
     "redis": "^2.8.0",
     "sprintf": "^0.1.5",
     "thenify": "^3.3.0",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "underscore.string": "^3.3.5"
   },
   "devDependencies": {
