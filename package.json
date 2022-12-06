@@ -9,7 +9,7 @@
     "connect": "~3.4.1",
     "deep-filter": "^1.0.2",
     "deepcopy": "^0.6.3",
-    "express": "~4.13.4",
+    "express": "~4.17.3",
     "extend": "^3.0.2",
     "jade": "~1.11.0",
     "joi": "^11.0.1",
